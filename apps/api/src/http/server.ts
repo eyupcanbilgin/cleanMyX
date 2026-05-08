@@ -1,10 +1,10 @@
 import Fastify from "fastify";
-import { createLogger } from "../logger.js";
+import { createLoggerOptions } from "../logger.js";
 import { registerRoutes } from "./routes.js";
 
 export async function buildServer() {
   const app = Fastify({
-    logger: createLogger(),
+    logger: createLoggerOptions(),
     trustProxy: true,
   });
 

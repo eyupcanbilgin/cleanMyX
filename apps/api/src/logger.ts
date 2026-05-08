@@ -1,8 +1,8 @@
-import pino from "pino";
+import pino, { type LoggerOptions } from "pino";
 import { redactSecrets } from "@xcleaner/crypto";
 
-export function createLogger() {
-  return pino({
+export function createLoggerOptions(): LoggerOptions {
+  return {
     level: process.env.LOG_LEVEL ?? "info",
     redact: {
       paths: [
@@ -28,6 +28,6 @@ export function createLogger() {
         method.apply(this, safeArgs as unknown as Parameters<typeof method>);
       },
     },
-  });
+  };
 }
 

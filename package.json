@@ -17,7 +17,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
   },
   "prisma": {
     "seed": "node prisma/seed.mjs"
@@ -35,9 +37,11 @@
   },
   "devDependencies": {
     "@types/node": "^22.17.0",
+    "@playwright/test": "^1.55.0",
     "prettier": "^3.6.2",
     "prisma": "^6.16.1",
     "turbo": "^2.5.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }
