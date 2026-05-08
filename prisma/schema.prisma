@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostType {
+  NORMAL
+  REPLY
+  QUOTE
+  REPOST
+}
+
+enum PostSource {
+  API_SCAN
+  ARCHIVE_IMPORT
+  MANUAL_IMPORT
+}
+
+enum PostDeletionStatus {
+  NOT_REQUESTED
+  PENDING
+  DELETED
+  FAILED
+  SKIPPED
+}
+
+enum DeletionJobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum DeletionItemStatus {
+  PENDING
+  RUNNING
+  WAITING_RATE_LIMIT
+  DELETED
+  DELETED_ALREADY
+  SKIPPED
+  FAILED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  xUserId   String   @unique
+  createdAt DateTime @default(now())
+
+  token        XToken?
+  posts        Post[]
+  deletionJobs DeletionJob[]
+  auditLogs    AuditLog[]
+}
+
+/// Short-lived session for OAuth PKCE flow.
+/// Stores encrypted code_verifier so callback can exchange code for tokens.
+model XAuthSession {
+  id              String   @id @default(cuid())
+  state           String   @unique
+  encCodeVerifier Json
+  expiresAt       DateTime
+  postAuthRedirectUrl String
+  createdAt       DateTime @default(now())
+}
+
+model XToken {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  encAccessToken Json
+  encRefreshToken Json?
+  tokenType      String?
+  scopes         String[] @default([])
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id             String            @id
+  userId         String
+  text           String
+  createdAt      DateTime
+  type           PostType
+  source         PostSource
+  sourceTweetId  String?
+  deletionStatus PostDeletionStatus @default(NOT_REQUESTED)
+  errorMessage   String?
+  lastSeenAt     DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deletionItems DeletionJobItem[]
+
+  @@index([userId, createdAt])
+  @@index([userId, type])
+  @@index([userId, source])
+}
+
+model DeletionJob {
+  id        String            @id @default(cuid())
+  userId    String
+  dryRun    Boolean           @default(true)
+  status    DeletionJobStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  startedAt DateTime?
+  finishedAt DateTime?
+
+  user  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items DeletionJobItem[]
+
+  @@index([userId, createdAt])
+}
+
+model DeletionJobItem {
+  id               String            @id @default(cuid())
+  jobId            String
+  postId           String
+  status           DeletionItemStatus @default(PENDING)
+  attempts         Int               @default(0)
+  lastError        String?
+  rateLimitResetAt DateTime?
+  updatedAt        DateTime          @updatedAt
+  createdAt        DateTime          @default(now())
+
+  job  DeletionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  post Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, postId])
+  @@index([jobId, status])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  actorIp    String?
+  metadataJson Json
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}
+

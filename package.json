@@ -11,11 +11,27 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "format": "prettier -w .",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "db:generate": "prisma generate",
+    "db:validate": "prisma validate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@prisma/client", "@prisma/engines", "prisma"]
   },
   "devDependencies": {
     "@types/node": "^22.17.0",
     "prettier": "^3.6.2",
+    "prisma": "^6.16.1",
     "turbo": "^2.5.6",
     "typescript": "^5.9.2"
   }
