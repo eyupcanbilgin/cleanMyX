@@ -1,0 +1,17 @@
+node_modules
+.next
+dist
+.turbo
+.cache
+.DS_Store
+
+.env
+.env.*
+!.env.example
+
+coverage
+playwright-report
+test-results
+
+.pnpm-store
+
