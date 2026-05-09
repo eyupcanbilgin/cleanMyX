@@ -9,6 +9,7 @@ export type AppConfig = {
   xRedirectUri: string;
   tokenEncKeyBase64: string;
   xUseReal: boolean;
+  redisUrl: string;
 };
 
 export function getConfig(): AppConfig {
@@ -19,6 +20,7 @@ export function getConfig(): AppConfig {
     process.env.X_REDIRECT_URI ?? `${apiBaseUrl}/auth/x/callback`;
   const tokenEncKeyBase64 = process.env.TOKEN_ENC_KEY ?? "";
   const xUseReal = (process.env.X_USE_REAL ?? "false").toLowerCase() === "true";
+  const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6379";
 
   return {
     port,
@@ -29,6 +31,7 @@ export function getConfig(): AppConfig {
     xRedirectUri,
     tokenEncKeyBase64,
     xUseReal,
+    redisUrl,
   };
 }
 

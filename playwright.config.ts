@@ -4,7 +4,8 @@ export default defineConfig({
   testDir: "./tests/e2e",
   webServer: [
     {
-      command: "pnpm -C apps/api build && node apps/api/dist/index.js",
+      command:
+        "pnpm db:generate && pnpm db:push && pnpm -C apps/api build && node apps/api/dist/index.js",
       url: "http://localhost:4000/health",
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

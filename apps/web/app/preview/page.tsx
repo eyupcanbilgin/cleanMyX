@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { PostType } from "@xcleaner/shared";
 import { PostType as PostTypeEnum } from "@xcleaner/shared";
 
@@ -19,18 +19,38 @@ export default function PreviewPage() {
   const [keyword, setKeyword] = useState("");
   const [beforeDate, setBeforeDate] = useState("");
   const [posts, setPosts] = useState<PostRow[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const headers = useMemo(() => ({ "x-user-id": userId }), [userId]);
-
-  async function load() {
+  async function load(nextUserId = userId) {
+    setIsLoading(true);
     const url = new URL(`${apiBase}/v1/posts`);
     if (type) url.searchParams.set("type", type);
     if (keyword) url.searchParams.set("keyword", keyword);
     if (beforeDate) url.searchParams.set("beforeDate", new Date(beforeDate).toISOString());
-    const res = await fetch(url.toString(), { headers });
-    const json = await res.json();
-    setPosts(json.posts ?? []);
+    try {
+      const res = await fetch(url.toString(), {
+        headers: { "x-user-id": nextUserId },
+      });
+      const json = await res.json();
+      setPosts(json.posts ?? []);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const nextUserId = params.get("userId") ?? "mock-user-1";
+    setUserId(nextUserId);
+    void load(nextUserId);
+    // Load once on entry with the default mock user or the userId from the URL.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const confirmParams = new URLSearchParams({ userId });
+  if (type) confirmParams.set("type", type);
+  if (keyword) confirmParams.set("keyword", keyword);
+  if (beforeDate) confirmParams.set("beforeDate", new Date(beforeDate).toISOString());
 
   return (
     <main className="card">
@@ -58,10 +78,10 @@ export default function PreviewPage() {
           Before&nbsp;
           <input type="date" value={beforeDate} onChange={(e) => setBeforeDate(e.target.value)} />
         </label>
-        <button className="btn primary" onClick={load}>
-          Load
+        <button className="btn primary" onClick={() => void load()} disabled={isLoading}>
+          {isLoading ? "Loading..." : "Load"}
         </button>
-        <a className="btn" href={`/confirm?userId=${encodeURIComponent(userId)}`}>
+        <a className="btn" href={`/confirm?${confirmParams.toString()}`}>
           Continue
         </a>
       </div>

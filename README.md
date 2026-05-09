@@ -11,5 +11,7 @@ Production-quality SaaS MVP scaffold to connect an X/Twitter account via OAuth, 
 - `packages/x-client`: X API client interface + mock-first implementation
 
 ## Local development
-Infrastructure runs via docker-compose (Postgres + Redis). App specifics will be documented as scaffolding lands.
+Infrastructure runs via Docker Compose (Postgres + Redis), and local development is mock-first by default.
+
+See [`docs/local-development.md`](docs/local-development.md) for the exact setup, mock scan -> preview -> dry-run deletion job flow, validation commands, and troubleshooting notes.
 

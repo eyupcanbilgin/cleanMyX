@@ -25,7 +25,7 @@ export function createLoggerOptions(): LoggerOptions {
         const safeArgs = args.map((a) =>
           typeof a === "object" ? redactSecrets(a) : a
         );
-        method.apply(this, safeArgs as unknown as Parameters<typeof method>);
+        return method.apply(this, safeArgs as unknown as Parameters<typeof method>);
       },
     },
   };

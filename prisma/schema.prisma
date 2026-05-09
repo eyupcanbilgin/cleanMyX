@@ -32,6 +32,7 @@ enum DeletionJobStatus {
   PENDING
   RUNNING
   COMPLETED
+  PARTIALLY_FAILED
   FAILED
   CANCELLED
 }

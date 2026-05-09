@@ -18,6 +18,7 @@ export const DeletionJobStatusSchema = z.enum([
   DeletionJobStatus.PENDING,
   DeletionJobStatus.RUNNING,
   DeletionJobStatus.COMPLETED,
+  DeletionJobStatus.PARTIALLY_FAILED,
   DeletionJobStatus.FAILED,
   DeletionJobStatus.CANCELLED,
 ]);

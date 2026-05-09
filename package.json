@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo lint",
+    "lint": "echo \"Lint is not configured yet; use pnpm typecheck && pnpm test\"",
     "test": "turbo test",
     "format": "prettier -w .",
     "typecheck": "turbo typecheck",
