@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "pnpm build && turbo dev",
     "build": "turbo build",
     "lint": "echo \"Lint is not configured yet; use pnpm typecheck && pnpm test\"",
     "test": "turbo test",

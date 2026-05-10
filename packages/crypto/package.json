@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "echo \"(scaffold)\"",
+    "lint": "echo \"Lint is not configured yet\"",
     "test": "vitest run"
   },
   "devDependencies": {

@@ -52,6 +52,7 @@ X Account Cleaner is a privacy-first MVP scaffold for letting a user connect the
 - Validate Prisma schema: `pnpm db:validate`
 - Push schema locally: `pnpm db:push`
 - Seed local data: `pnpm db:seed`
+- Run all local services: `pnpm dev`
 - Build API/worker/web: `pnpm build`
 - Run API after build: `pnpm -C apps/api dev`
 - Run worker after build: `pnpm -C apps/worker dev`
